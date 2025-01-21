@@ -4,6 +4,33 @@ import requests
 from threading import Thread
 import time
 
+import httpx
+
+WEBSITE = "https://www.animeworld.so"
+
+def generate_client():
+  session = httpx.Client()
+
+  headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36" }
+
+  session.headers.update(headers)
+  csrf_token = re.compile(br'<meta.*?id="csrf-token"\s*?content="(.*?)">')
+  cookie = re.compile(br'document\.cookie\s*?=\s*?"(.+?)=(.+?)(\s*?;\s*?path=.+?)?"\s*?;')
+
+  for _ in range(2):
+    res = session.get(WEBSITE, follow_redirects=True)
+
+    m = cookie.search(res.content)
+    if m:
+      session.cookies.update({m.group(1).decode('utf-8'): m.group(2).decode('utf-8')})
+      continue
+
+    m = csrf_token.search(res.content)
+    if m:
+      session.headers.update({'csrf-token': m.group(1).decode('utf-8')})
+      break
+  return session
+
 
 def download_chunk(url, start, end, chunk_num, output_folder, progress_dict):
   headers = {'Range': f'bytes={start}-{end}'}
@@ -81,7 +108,8 @@ import re
 
 def download_episodes(link, name, episode_number=1):
   print(f"Downloading {name} episode {episode_number} from {link}")
-  response = requests.get(link)
+  response = generate_client().get(link, follow_redirects=True)
+  print(response)
   if response.status_code == 200:
     soup = BeautifulSoup(response.text, 'html.parser')
     link_tag = soup.find('a', id="alternativeDownloadLink")
