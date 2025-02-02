@@ -1,4 +1,4 @@
-from libs.downloader import download_episodes
+from libs.downloader import DownloadPopup
 from libs.searcher import search_anime
 from libs.strings import ANGRY_GIRL
 import customtkinter
@@ -15,8 +15,9 @@ class Popup(customtkinter.CTkToplevel):
   def __init__(self, parent):
     super().__init__(parent)
     self.title("Manda al Modem")
-    self.geometry("300x150")
+    self.attributes("-topmost", True)
     self.anime = anime_in_directory()
+    self.geometry(f"400x{200+20*len(self.anime)}")
     self.anime_var = {anime: customtkinter.BooleanVar(value=False) for anime in self.anime}
 
     customtkinter.CTkLabel(self, text="Questo è un popup!").pack(pady=10)
@@ -30,7 +31,7 @@ class Popup(customtkinter.CTkToplevel):
     customtkinter.CTkButton(self, text="Send to Modem", command=send_to_modem).pack(pady=10)
     customtkinter.CTkButton(self, text="Chiudi", command=self.destroy).pack(pady=10)
 
-class ModemChanApp:
+class ModemChanApp(customtkinter.CTk):
   def __init__(self):
     self.NOME_APP = "Modem-Chan"
     self.website = "https://www.animeworld.so/"
@@ -47,7 +48,7 @@ class ModemChanApp:
     self.ricerca = customtkinter.CTkEntry(self.app, placeholder_text="Evangelion", height=50, width=500, font=('Kristen ITC', 25))
     self.ricerca.bind("<Return>", self.enter_key)
     self.button_ricerca = customtkinter.CTkButton(self.app, height=40, width=40, image=self.icon_search, command=self.search, text="", corner_radius=100)
-    self.button_invio_modem = customtkinter.CTkButton(self.app, text="Invio Modem", command=self.send_modem, corner_radius=100, font=('Kristen ITC', 15))
+    self.button_invio_modem = customtkinter.CTkButton(self.app, text="Invio Modem",text_color="#000000", command=self.send_modem, corner_radius=100, font=('Kristen ITC', 15))
 
     self.switch_var_titolo = customtkinter.StringVar(value="Alternativo")
     self.title_switch = customtkinter.CTkSwitch(self.app, text="Titoli in Alternativo", font=('Kristen ITC', 15), command=self.switch_title,
@@ -124,8 +125,8 @@ class ModemChanApp:
           if result[title_type] in anime_already_downloaded:
             download_button = customtkinter.CTkButton(self.scrollable_frame, text="In libreria", state="disabled", fg_color="#ffaa00", text_color_disabled="#000000")
           else:
-            download_button = customtkinter.CTkButton(self.scrollable_frame, text="Download",
-                                  command=lambda link=result["link"], title=result[title_type]: self.download_episodes_func(link, title))
+            download_button = customtkinter.CTkButton(self.scrollable_frame, text="Download",text_color="#000000",
+                                  command=lambda result=result: self.download_episodes_func(result))
           download_button.grid(row=i, column=2, padx=5, pady=5)
       else:
         no_result = f"Hai scritto bene? Non ho trovato nulla con \"{text}\", senpai!\n{ANGRY_GIRL}"
@@ -134,8 +135,9 @@ class ModemChanApp:
 
     threading.Thread(target=background_search).start()
 
-  def download_episodes_func(self, link, name):
-    threading.Thread(target=download_episodes, args=(link, name)).start()
+  def download_episodes_func(self, anime):
+    DownloadPopup(self.app, anime)
+    #threading.Thread(target=download_episodes, args=(link, name)).start()
 
   def switch_title(self):
     self.title_switch.configure(text=f"Titoli in {self.title_switch.get()}")
