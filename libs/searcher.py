@@ -32,14 +32,11 @@ def search_anime(query="Evangelion"):
   response = generate_client().get(WEBSITE+"/search?keyword=" + query)
   if response.status_code == 200:
     soup = BeautifulSoup(response.text, 'html.parser')
-    
-    # Trova tutti i div con classe "item"
+
     items = soup.find_all('div', class_='item')
-    
-    # Filtra gli items che non contengono la query
+
     filtered_items = [item for item in items if query.lower() in item.text.lower()]
-    
-    # Crea una lista di dizionari con le informazioni richieste
+
     anime_data = []
     for item in filtered_items:
       title_italian = item.find('a', class_='name').text.strip()
@@ -48,8 +45,8 @@ def search_anime(query="Evangelion"):
       link = WEBSITE + item.find('a', class_='name')['href']
       
       anime_data.append({
-        'title_italian': title_italian,
-        'jtitle': jtitle,
+        'jap_title': title_italian,
+        'it_title': jtitle,
         'image_url': image_url,
         'link': link
       })

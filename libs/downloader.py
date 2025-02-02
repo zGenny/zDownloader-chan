@@ -86,8 +86,8 @@ def download_file_multithread(url, output_file, num_threads=13):
     speed = downloaded / elapsed_time if elapsed_time > 0 else 0
     percentage = (downloaded / file_size) * 100
     remaining_time = (file_size - downloaded) / speed if speed > 0 else float('inf')
-
-    print(f"\rScaricato: {percentage:.2f}% | Velocità: {speed / 1024:.2f} KB/s | Tempo rimanente: {remaining_time:.2f} s", end="")
+    print(f"\rProgress: {percentage:.2f}%\nDownloaded: {downloaded / (1024 * 1024):.2f} MB of {file_size / (1024 * 1024):.2f} MB\nSpeed: {speed / (1024 * 1024):.2f} MB/s\nETA: {remaining_time:.2f} s     ", end="")
+    print("\033[F\033[F\033[F", end="")  # Move the cursor up 3 lines
 
   print("\n")
 
@@ -106,20 +106,21 @@ def download_file_multithread(url, output_file, num_threads=13):
 
 import re
 
-def download_episodes(link, name, episode_number=1):
-  print(f"Downloading {name} episode {episode_number} from {link}")
+def download_episodes(link, name, episode_number=0):
+  #print(f"Downloading {name} episode {episode_number} from {link}")
   response = generate_client().get(link, follow_redirects=True)
-  print(response)
   if response.status_code == 200:
     soup = BeautifulSoup(response.text, 'html.parser')
     link_tag = soup.find('a', id="alternativeDownloadLink")
     if link_tag:
       link = link_tag.get('href')
-      print(f"Link trovato: {link}")
+      #print(f"Link trovato: {link}")
       while True:
         if requests.head(link).status_code != 200:
           break
-        download_file_multithread(link, "./downloads/"+name+"/"+str(episode_number)+".mp4")
+        episode_output = f"./downloads/{name}/{int(episode_number) + 1:02}.mp4"
+        print(f"Downloading {name} episode {episode_number} from {link}")
+        download_file_multithread(link, episode_output)
         episode_number += 1
         link = re.sub(r"_(\d+)_", lambda m: f"_{int(m.group(1)) + 1:02}_", link)
     else:
