@@ -33,7 +33,7 @@ class Popup(customtkinter.CTkToplevel):
 
 class ModemChanApp(customtkinter.CTk):
   def __init__(self):
-    self.NOME_APP = "Modem-Chan"
+    self.NOME_APP = "zeta-chan"
     self.website = "https://www.animeworld.so/"
     self.setup_ui()
 

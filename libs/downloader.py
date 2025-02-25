@@ -52,7 +52,7 @@ def download_chunk(url, start, end, chunk_num, output_folder, progress_dict):
       progress_dict[chunk_num] = total_downloaded
 
 
-def download_file_multithread(url, output_file, num_threads=20, update_ui_callback=None):
+def download_file_multithread(url, output_file, num_threads=5, update_ui_callback=None):
   """
     ## Scarica un file utilizzando download multithread.
 
@@ -94,9 +94,7 @@ def download_file_multithread(url, output_file, num_threads=20, update_ui_callba
     percentage = (downloaded / file_size) * 100
     remaining_time = (file_size - downloaded) / speed if speed > 0 else float('inf')
     if update_ui_callback:
-      update_ui_callback(percentage, downloaded, file_size, speed, remaining_time)  # Add a small delay to reduce UI update frequency
-    # print(f"\rProgress: {percentage:.2f}%\nDownloaded: {downloaded / (1024 * 1024):.2f} MB of {file_size / (1024 * 1024):.2f} MB\nSpeed: {speed / (1024 * 1024):.2f} MB/s\nETA: {remaining_time:.2f} s     ", end="")
-    # print("\033[F\033[F\033[F", end="")  # Move the cursor up 3 lines
+      update_ui_callback(percentage, downloaded, file_size, speed, remaining_time)
     time.sleep(0.02)
 
   print("\n")
@@ -117,13 +115,6 @@ def download_file_multithread(url, output_file, num_threads=20, update_ui_callba
   print(f"\nDownload completato. File salvato in: {output_file}")
 
 import re
-
-
-
-
-
-#TODO!: Implementare classe PopUp con progressbar ecc per poi chiamarla nel main.py
-
 import customtkinter
 import requests
 from PIL import Image, ImageTk
@@ -238,14 +229,14 @@ class DownloadPopup(customtkinter.CTkToplevel):
             if link_tag:
               link = link_tag.get('href')
               episodes.append(link)
-    return episodes
+    return set(episodes)
   
   def download_episodes(self, link, name, episode_number=0):
     episodes = self.get_episodes(link)
     for episode_link in episodes:
       episode_output = f"./downloads/{name}/{int(episode_number) + 1:02}.mp4"
       print(f"Downloading {name} episode {episode_number} from {episode_link}")
-      download_file_multithread(episode_link, episode_output, 13, self.update_episode_progress)
+      download_file_multithread(episode_link, episode_output, 8, self.update_episode_progress)
       episode_number += 1
       self.update_progress(episode_number)
     print("Download completato")
