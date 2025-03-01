@@ -2,6 +2,8 @@
 Essando il sito di AnimeWorld italiano, il readme è scritto in italiano.
 zDownloader-chan è un semplice tool per scaricare anime da [AnimeWorld](https://www.animeworld.tv/) sfruttando il **multiprocesso** per velocizzare il download.
 
+[![PayPal](photos/donate.png)](https://paypal.me/zgenny?country.x=IT&locale.x=it_IT)
+
 ## Perchè?
 Il programma permette di scaricare **l'intera serie** con un solo click, senza dover selezionare manualmente ogni episodio. Grazie al multiprocesso, il download è **notevolmente** più rapido. L'idea è nata per consentire la visione degli anime sul mio home server. In futuro, una funzionalità prevista sarà l'invio automatico della serie direttamente all'home server.
 
@@ -42,7 +44,7 @@ Avvia il programma con:
 Si avvierà la GUI del programma, da qui potrai cercare il tuo anime da voler scaricare e cliccare sul pulsante "Download" per scaricare **TUTTA** la serie.
 
 ## Note
-- Per ora il programma non è stato testato troppo, quindi potrebbero esserci dei bug. Nel caso, apri pure una issue :)
+- Per ora il programma non è stato testato troppo, quindi potrebbero esserci dei bug. Nel caso, apri pure una issue 😃
 
 ## Licenza
 Questo progetto è distribuito sotto licenza MIT.

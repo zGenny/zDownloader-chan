@@ -14,6 +14,7 @@ def anime_in_directory():
 class Popup(customtkinter.CTkToplevel):
   def __init__(self, parent):
     super().__init__(parent)
+    self.app.after(201, lambda :self.app.iconbitmap('icons/icon.ico'))
     self.title("Manda al Modem")
     self.attributes("-topmost", True)
     self.anime = anime_in_directory()
@@ -33,13 +34,14 @@ class Popup(customtkinter.CTkToplevel):
 
 class ModemChanApp(customtkinter.CTk):
   def __init__(self):
-    self.NOME_APP = "zeta-chan"
+    self.NOME_APP = "zDownloader-chan"
     self.website = "https://www.animeworld.so/"
     self.setup_ui()
 
   def setup_ui(self):
     customtkinter.set_default_color_theme("theme/MoonLight.json")
     self.app = customtkinter.CTk()
+    self.app.after(201, lambda :self.app.iconbitmap('icons/icon.ico'))
     self.app.title(self.NOME_APP)
     self.app.geometry("1080x720")
     self.icon_search = customtkinter.CTkImage(light_image=Image.open("icons/Search.ico"),dark_image=Image.open("icons/Search.ico"),size=(30, 30))

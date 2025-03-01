@@ -135,6 +135,7 @@ class DownloadPopup(customtkinter.CTkToplevel):
   def __init__(self, parent, anime):
     super().__init__(parent)
     self.title("Download episodi")
+    self.after(201, lambda :self.iconbitmap('icons/icon.ico'))
     self.resizable(False, False)
     self.attributes("-topmost", True)
     self.it_title  = anime["it_title"]
@@ -145,7 +146,7 @@ class DownloadPopup(customtkinter.CTkToplevel):
     # Setting delle varie vars di anime
     self.studio = anime_parsed["studio"]
     self.rilascio = anime_parsed["release"]
-    self.episodi = int(anime_parsed["episodes"])
+    self.episodi = int(anime_parsed["episodes"]) if anime_parsed["episodes"] != "??" else -1
     self.durata = anime_parsed["durationEpisodes"]
     self.anno = anime_parsed["year"]
     self.tipo = anime_parsed["animeTypeName"]
