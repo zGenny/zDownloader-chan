@@ -38,7 +38,7 @@ class ModemChanApp(customtkinter.CTk):
     self.setup_ui()
 
   def setup_ui(self):
-    customtkinter.set_default_color_theme("MoonLight.json")
+    customtkinter.set_default_color_theme("theme/MoonLight.json")
     self.app = customtkinter.CTk()
     self.app.title(self.NOME_APP)
     self.app.geometry("1080x720")
