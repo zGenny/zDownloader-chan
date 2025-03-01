@@ -1,0 +1,7 @@
+beautifulsoup4==4.10.0
+customtkinter==5.2.2
+httpx==0.28.1
+Pillow==10.0.1
+Pillow==9.0.1
+Pillow==11.1.0
+Requests==2.32.3
