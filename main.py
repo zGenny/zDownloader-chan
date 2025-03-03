@@ -146,4 +146,6 @@ class ModemChanApp(customtkinter.CTk):
     self.search()
 
 if __name__ == "__main__":
+  if not os.path.exists("downloads"):
+    os.makedirs("downloads")
   ModemChanApp()
