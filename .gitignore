@@ -1,2 +1,3 @@
 venv/
+libs/__pycache__/
 *.mp4
