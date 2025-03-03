@@ -35,7 +35,7 @@ def search_anime(query="Evangelion"):
 
     items = soup.find_all('div', class_='item')
 
-    filtered_items = [item for item in items if query.lower() in item.text.lower()]
+    filtered_items = [item for item in items if query.lower() in str(item).lower()]
 
     anime_data = []
     for item in filtered_items:
@@ -45,8 +45,8 @@ def search_anime(query="Evangelion"):
       link = WEBSITE + item.find('a', class_='name')['href']
       
       anime_data.append({
-        'jap_title': title_italian,
-        'it_title': jtitle,
+        'jap_title': jtitle,
+        'it_title': title_italian,
         'image_url': image_url,
         'link': link
       })

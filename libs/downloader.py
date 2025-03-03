@@ -126,9 +126,10 @@ def get_anime_info(name, jname):
   data = response.json()
   data = data["animes"]
   for anime in data:
-    print(anime["name"], anime["jtitle"])
-    if anime["name"] == jname or anime["jtitle"] == name:
+    # sometimes the name is in the jtitle field and vice versa
+    if anime["name"] == jname or anime["jtitle"] == name or anime["name"] == name or anime["jtitle"] == jname:
       return anime
+
   return None
 
 class DownloadPopup(customtkinter.CTkToplevel):

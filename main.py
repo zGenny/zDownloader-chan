@@ -14,7 +14,7 @@ def anime_in_directory():
 class Popup(customtkinter.CTkToplevel):
   def __init__(self, parent):
     super().__init__(parent)
-    self.app.after(201, lambda :self.app.iconbitmap('icons/icon.ico'))
+    self.after(201, lambda :self.iconbitmap('icons/icon.ico'))
     self.title("Manda al Modem")
     self.attributes("-topmost", True)
     self.anime = anime_in_directory()
@@ -108,7 +108,7 @@ class ModemChanApp(customtkinter.CTk):
     anime_already_downloaded = anime_in_directory()
 
     def background_search():
-      title_type = "it_title" if self.title_switch.get() == "Alternativo" else "jap_title"
+      title_type = "it_title" if self.switch_var_titolo.get() == "Alternativo" else "jap_title"
       text = self.ricerca.get().strip()
       if text == "":
         return
