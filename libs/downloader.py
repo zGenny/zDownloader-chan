@@ -134,7 +134,6 @@ def get_anime_info(name, jname):
 class DownloadPopup(customtkinter.CTkToplevel):
   def __init__(self, parent, anime):
     super().__init__(parent)
-    self.title("Download episodi")
     self.after(201, lambda :self.iconbitmap('icons/icon.ico'))
     self.resizable(False, False)
     self.attributes("-topmost", True)
@@ -154,6 +153,7 @@ class DownloadPopup(customtkinter.CTkToplevel):
     self.visualizzazioni = anime_parsed["totViews"]
     self.doppiaggio = 'Sub ITA' if anime_parsed["dub"] == '0' else 'Dub ITA'
     self.storia = anime_parsed["story"]
+    self.title(f"Download di {self.it_title}")
     self.setup_ui()
   
   def setup_ui(self):
