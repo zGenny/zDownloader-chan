@@ -126,7 +126,6 @@ def get_anime_info(name, jname):
   data = response.json()
   data = data["animes"]
   for anime in data:
-    # sometimes the name is in the jtitle field and vice versa
     if anime["name"] == jname or anime["jtitle"] == name or anime["name"] == name or anime["jtitle"] == jname:
       return anime
 
@@ -206,10 +205,17 @@ class DownloadPopup(customtkinter.CTkToplevel):
 
     self.download_button = customtkinter.CTkButton(frame, text="Scarica Episodi", command=self.start_download)
     self.download_button.grid(row=15, column=1, sticky="w", pady=10)
+    
+    self.threads_label = customtkinter.CTkLabel(frame, text="Threads:", font=("Arial", 12))
+    self.threads_label.grid(row=15, column=0, sticky="w", pady=10, padx=10)
+
+    self.threads_var = customtkinter.StringVar(value="8")
+    self.threads_dropdown = customtkinter.CTkOptionMenu(frame, variable=self.threads_var, values=[str(i) for i in range(1, 13)], width=15)
+    self.threads_dropdown.grid(row=15, column=0, sticky="w", pady=10, padx=55)
 
   def start_download(self):
     self.progress_label.configure(text=f"Episodio scaricato: 0 di {self.episodi}")
-    self.download_episodes_thread = Thread(target=self.download_episodes, args=(self.link, self.it_title))
+    self.download_episodes_thread = Thread(target=self.download_episodes, args=(self.link, self.it_title, self.anno))
     self.download_episodes_thread.start()
     self.download_button.configure(state="disabled", text="Download in corso...")
 
@@ -218,27 +224,32 @@ class DownloadPopup(customtkinter.CTkToplevel):
     response = session.get(link, follow_redirects=True)
     soup = BeautifulSoup(response.text, 'html.parser')
     episodes = []
+    unique_episodes = {}
     if response.status_code == 200:
       for episode in soup.find_all('li', class_='episode'):
         link_tag = episode.find('a')
         if link_tag:
-          href = link_tag.get('href')
-          full_link = WEBSITE + href
-          response = session.get(full_link, follow_redirects=True)
-          if response.status_code == 200:
-            soup = BeautifulSoup(response.text, 'html.parser')
-            link_tag = soup.find('a', id="alternativeDownloadLink")
-            if link_tag:
-              link = link_tag.get('href')
-              episodes.append(link)
-    return set(episodes)
+          episode_id = link_tag.get("data-episode-id")
+          if episode_id not in unique_episodes:
+            unique_episodes[episode_id] = True
+            href = link_tag.get('href')
+            full_link = WEBSITE + href
+            response = session.get(full_link, follow_redirects=True)
+            if response.status_code == 200:
+              soup = BeautifulSoup(response.text, 'html.parser')
+              link_tag = soup.find('a', id="alternativeDownloadLink")
+              if link_tag:
+                link = link_tag.get('href')
+                episodes.append(link)
+    return episodes
+
   
-  def download_episodes(self, link, name, episode_number=0):
+  def download_episodes(self, link, name, year, episode_number=0):
     episodes = self.get_episodes(link)
     for episode_link in episodes:
-      episode_output = f"./downloads/{name}/{int(episode_number) + 1:02}.mp4"
+      episode_output = f"./downloads/{name}({year})/{name} ({year}) - e{int(episode_number) + 1:02}.mp4"
       print(f"Downloading {name} episode {episode_number} from {episode_link}")
-      download_file_multithread(episode_link, episode_output, 8, self.update_episode_progress)
+      download_file_multithread(episode_link, episode_output, self.threads_var, self.update_episode_progress)
       episode_number += 1
       self.update_progress(episode_number)
     print("Download completato")
