@@ -59,7 +59,7 @@ def download_file_multithread(url, output_file, num_threads=5, update_ui_callbac
     Args:
         url (str): URL del file da scaricare.
         output_file (str): Percorso dove salvare il file scaricato.
-        num_threads (int): Numero di thread da utilizzare.
+        num_threads.get() (int): Numero di thread da utilizzare.
 
     Returns:
         None
@@ -70,19 +70,19 @@ def download_file_multithread(url, output_file, num_threads=5, update_ui_callbac
     return
 
   file_size = int(response.headers['Content-Length'])
-  chunk_size = file_size // num_threads
+  chunk_size = file_size // num_threads.get()
   output_folder = os.path.dirname(output_file)
   os.makedirs(output_folder, exist_ok=True)
 
   # Dizionario per tracciare i progressi di ogni thread
-  progress_dict = {i: 0 for i in range(num_threads)}
+  progress_dict = {i: 0 for i in range(num_threads.get())}
   threads = []
 
   start_time = time.time()
 
-  for i in range(num_threads):
+  for i in range(num_threads.get()):
     start = i * chunk_size
-    end = (start + chunk_size - 1) if i < num_threads - 1 else file_size - 1
+    end = (start + chunk_size - 1) if i < num_threads.get() - 1 else file_size - 1
     thread = Thread(target=download_chunk, args=(url, start, end, i, output_folder, progress_dict))
     threads.append(thread)
     thread.start()
@@ -104,7 +104,7 @@ def download_file_multithread(url, output_file, num_threads=5, update_ui_callbac
 
   # Combina tutti i chunk in un unico file
   with open(output_file, "wb") as output:
-    for i in range(num_threads):
+    for i in range(num_threads.get()):
       chunk_path = os.path.join(output_folder, f"chunk_{i}.tmp")
       with open(chunk_path, "rb") as chunk:
           output.write(chunk.read())
@@ -209,7 +209,7 @@ class DownloadPopup(customtkinter.CTkToplevel):
     self.threads_label = customtkinter.CTkLabel(frame, text="Threads:", font=("Arial", 12))
     self.threads_label.grid(row=15, column=0, sticky="w", pady=10, padx=10)
 
-    self.threads_var = customtkinter.StringVar(value="8")
+    self.threads_var = customtkinter.IntVar(value=8)
     self.threads_dropdown = customtkinter.CTkOptionMenu(frame, variable=self.threads_var, values=[str(i) for i in range(1, 13)], width=15)
     self.threads_dropdown.grid(row=15, column=0, sticky="w", pady=10, padx=55)
 
