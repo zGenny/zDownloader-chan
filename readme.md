@@ -1,19 +1,27 @@
 # zDownloader-chan
-Essando il sito di AnimeWorld italiano, il readme è scritto in italiano.
+Essendo il sito di AnimeWorld italiano, il readme è scritto in italiano.
 zDownloader-chan è un semplice tool per scaricare anime da [AnimeWorld](https://www.animeworld.tv/) sfruttando il **multiprocesso** per velocizzare il download.
 
-[![PayPal](photos/donate.png)](https://paypal.me/zgenny?country.x=IT&locale.x=it_IT)
+## Perché?
 
-## Perchè?
-Il programma permette di scaricare **l'intera serie** con un solo click, senza dover selezionare manualmente ogni episodio. Grazie al multiprocesso, il download è **notevolmente** più rapido. L'idea è nata per consentire la visione degli anime sul mio home server. In futuro, una funzionalità prevista sarà l'invio automatico della serie direttamente all'home server.
+zDownloader-chan nasce per semplificare il download degli anime da AnimeWorld.
+Il programma consente di scaricare **un’intera serie con un solo click**, evitando
+la selezione manuale dei singoli episodi.
 
-# Foto
+Grazie all’uso del **multiprocesso**, i download risultano **notevolmente più rapidi**.
+L’idea è nata per consentire la visione degli anime sul mio **home server**; in futuro
+è prevista anche una funzionalità di **invio automatico della serie direttamente al server**.
 
-Ecco un esempio di come appare il programma:
-![Home](photos/home.jpg)
+## Screenshot
 
-Ecco invece un esempio di come appare il programma quando si vuole scaricare un episodio:
-![Download](photos/downloadd.jpg)
+**Schermata principale**
+<br>
+<img src="photos/home.jpg" width="600">
+
+**Download episodio**
+<br>
+<img src="photos/downloadd.jpg" width="600">
+
 
 ## Installazione
 
@@ -43,11 +51,27 @@ Avvia il programma con:
 
 Si avvierà la GUI del programma, da qui potrai cercare il tuo anime da voler scaricare e cliccare sul pulsante "Download" per scaricare **TUTTA** la serie.
 
-## Note
-- Per ora il programma non è stato testato troppo, quindi potrebbero esserci dei bug. Nel caso, apri pure una issue 😃
+## Problemi noti
+
+### Errore di build di Pillow su Fedora ([Pillow build fails (#1)](https://github.com/zGenny/zDownloader-chan/issues/1))
+
+Su alcune versioni di Fedora (es. Fedora 43), Pillow può fallire in fase di build
+a causa della mancanza di librerie di sistema.
+
+**Risoluzione:**
+
+Installare le dipendenze necessarie:
+
+```bash
+sudo dnf install libjpeg-turbo-devel zlib-devel python3-devel gcc
+```
+#### In caso di altri problemi, non esitare ad aprire una issue 😃
 
 ## Licenza
 Questo progetto è distribuito sotto licenza MIT.
+
+## Donazioni
+[![PayPal](photos/donate.png)](https://paypal.me/zgenny?country.x=IT&locale.x=it_IT)
 
 ---
 **Disclaimer:** Questo software è fornito solo a scopo educativo. L'uso improprio potrebbe violare i termini di servizio di AnimeWorld. L'autore non si assume alcuna responsabilità per eventuali violazioni.
