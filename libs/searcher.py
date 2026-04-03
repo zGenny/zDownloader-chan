@@ -2,7 +2,7 @@ import httpx
 from bs4 import BeautifulSoup
 import re
 
-WEBSITE = "https://www.animeworld.so"
+WEBSITE = "https://www.animeworld.ac"
 
 def generate_client():
   session = httpx.Client()

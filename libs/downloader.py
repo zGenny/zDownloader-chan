@@ -122,7 +122,7 @@ from io import BytesIO
 
 def get_anime_info(name, jname):
   s = generate_client()
-  response = s.post("https://www.animeworld.so/api/search/v2?", params = {"keyword": name}, follow_redirects=True)
+  response = s.post("https://www.animeworld.ac/api/search/v2?", params = {"keyword": name}, follow_redirects=True)
   data = response.json()
   data = data["animes"]
   for anime in data:

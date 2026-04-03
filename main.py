@@ -35,7 +35,7 @@ class Popup(customtkinter.CTkToplevel):
 class ModemChanApp(customtkinter.CTk):
   def __init__(self):
     self.NOME_APP = "zDownloader-chan"
-    self.website = "https://www.animeworld.so/"
+    self.website = "https://www.animeworld.ac/"
     self.setup_ui()
 
   def setup_ui(self):

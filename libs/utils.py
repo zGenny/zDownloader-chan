@@ -1,7 +1,7 @@
 import httpx
 import re
 
-WEBSITE = "https://www.animeworld.so"
+WEBSITE = "https://www.animeworld.ac"
 
 
 def generate_client():
