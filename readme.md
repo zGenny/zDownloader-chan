@@ -49,6 +49,27 @@ Avvia il programma con:
    python3 ./main.py
    ```
 
+
+
+### Configurazione
+
+Per configurare l'URL del sito anime o altri parametri, consultare la [documentazione di configurazione](Config.md).
+
+Esempio rapido per cambiare l'URL base:
+```bash
+# Via variabile d'ambiente (temporanea)
+export ANIMEWORLD_BASE_URL=https://www.nuovo-sito-anime.it
+python3 ./main.py
+```
+
+Oppure modificare il file `libs/config.json`:
+```json
+{
+  "base_url": "https://www.nuovo-sito-anime.it",
+  ...
+}
+```
+
 Si avvierà la GUI del programma, da qui potrai cercare il tuo anime da voler scaricare e cliccare sul pulsante "Download" per scaricare **TUTTA** la serie.
 
 ## Problemi noti

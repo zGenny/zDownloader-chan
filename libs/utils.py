@@ -1,20 +1,30 @@
 import httpx
 import re
-
-WEBSITE = "https://www.animeworld.ac"
+from .config import config
 
 
 def generate_client():
+  """
+  Genera e configura un client httpx con headers e cookie/token CSRF.
+  
+  Utilizza la configurazione centralizzata per base_url e user_agent.
+  
+  Returns:
+      httpx.Client: Client HTTP configurato
+  """
   session = httpx.Client()
 
-  headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36" }
+  headers = {"User-Agent": config.get_user_agent()}
 
   session.headers.update(headers)
   csrf_token = re.compile(br'<meta.*?id="csrf-token"\s*?content="(.*?)">')
   cookie = re.compile(br'document\.cookie\s*?=\s*?"(.+?)=(.+?)(\s*?;\s*?path=.+?)?"\s*?;')
 
+  # Ottiene l'URL base dalla configurazione centralizzata
+  base_url = config.get_base_url()
+
   for _ in range(2):
-    res = session.get(WEBSITE, follow_redirects=True)
+    res = session.get(base_url, follow_redirects=True)
 
     m = cookie.search(res.content)
     if m:

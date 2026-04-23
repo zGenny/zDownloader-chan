@@ -1,6 +1,7 @@
 from libs.downloader import DownloadPopup
 from libs.searcher import search_anime
 from libs.strings import ANGRY_GIRL
+from libs.config import config
 import customtkinter
 from PIL import Image, ImageTk
 import requests
@@ -35,7 +36,8 @@ class Popup(customtkinter.CTkToplevel):
 class ModemChanApp(customtkinter.CTk):
   def __init__(self):
     self.NOME_APP = "zDownloader-chan"
-    self.website = "https://www.animeworld.ac/"
+    # Ottiene l'URL base dalla configurazione centralizzata
+    self.website = config.get_base_url()
     self.setup_ui()
 
   def setup_ui(self):
