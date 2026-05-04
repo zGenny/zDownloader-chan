@@ -1,35 +1,15 @@
 import os
-from bs4 import BeautifulSoup
-import requests
-from threading import Thread
+import re
 import time
+from threading import Thread
 
 import httpx
+import requests
+from bs4 import BeautifulSoup
 
-WEBSITE = "https://www.animeworld.so"
+from .config import config
+from .utils import generate_client
 
-def generate_client():
-  session = httpx.Client()
-
-  headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36" }
-
-  session.headers.update(headers)
-  csrf_token = re.compile(br'<meta.*?id="csrf-token"\s*?content="(.*?)">')
-  cookie = re.compile(br'document\.cookie\s*?=\s*?"(.+?)=(.+?)(\s*?;\s*?path=.+?)?"\s*?;')
-
-  for _ in range(2):
-    res = session.get(WEBSITE, follow_redirects=True)
-
-    m = cookie.search(res.content)
-    if m:
-      session.cookies.update({m.group(1).decode('utf-8'): m.group(2).decode('utf-8')})
-      continue
-
-    m = csrf_token.search(res.content)
-    if m:
-      session.headers.update({'csrf-token': m.group(1).decode('utf-8')})
-      break
-  return session
 
 def fetch_image(self, url):
   response = requests.get(url)
@@ -115,14 +95,28 @@ def download_file_multithread(url, output_file, num_threads=5, update_ui_callbac
   print(f"\nDownload completato. File salvato in: {output_file}")
 
 import re
+from io import BytesIO
+
 import customtkinter
 import requests
 from PIL import Image, ImageTk
-from io import BytesIO
+
 
 def get_anime_info(name, jname):
+  """
+  Recupera le informazioni dettagliate di un anime tramite l'API JSON.
+
+  Args:
+      name (str): Nome italiano dell'anime
+      jname (str): Nome giapponese dell'anime
+
+  Returns:
+      dict: Dizionario con le informazioni dell'anime, None se non trovato
+  """
   s = generate_client()
-  response = s.post("https://www.animeworld.so/api/search/v2?", params = {"keyword": name}, follow_redirects=True)
+  # Utilizza l'endpoint API dalla configurazione centralizzata
+  api_endpoint = config.get_api_endpoint()
+  response = s.post(api_endpoint, params={"keyword": name}, follow_redirects=True)
   data = response.json()
   data = data["animes"]
   for anime in data:
@@ -220,6 +214,15 @@ class DownloadPopup(customtkinter.CTkToplevel):
     self.download_button.configure(state="disabled", text="Download in corso...")
 
   def get_episodes(self, link):
+    """
+    Estrae la lista degli episodi disponibili da un link di anime.
+
+    Args:
+        link (str): URL della pagina dell'anime
+
+    Returns:
+        list: Lista di URL di download degli episodi
+    """
     session = generate_client()
     response = session.get(link, follow_redirects=True)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -233,7 +236,8 @@ class DownloadPopup(customtkinter.CTkToplevel):
           if episode_id not in unique_episodes:
             unique_episodes[episode_id] = True
             href = link_tag.get('href')
-            full_link = WEBSITE + href
+            # Utilizza get_full_url() dalla configurazione per costruire l'URL completo
+            full_link = config.get_full_url(href)
             response = session.get(full_link, follow_redirects=True)
             if response.status_code == 200:
               soup = BeautifulSoup(response.text, 'html.parser')

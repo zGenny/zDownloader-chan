@@ -1,35 +1,14 @@
 import httpx
 from bs4 import BeautifulSoup
 import re
-
-WEBSITE = "https://www.animeworld.so"
-
-def generate_client():
-  session = httpx.Client()
-
-  headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36" }
-
-  session.headers.update(headers)
-  csrf_token = re.compile(br'<meta.*?id="csrf-token"\s*?content="(.*?)">')
-  cookie = re.compile(br'document\.cookie\s*?=\s*?"(.+?)=(.+?)(\s*?;\s*?path=.+?)?"\s*?;')
-
-  for _ in range(2):
-    res = session.get(WEBSITE, follow_redirects=True)
-
-    m = cookie.search(res.content)
-    if m:
-      session.cookies.update({m.group(1).decode('utf-8'): m.group(2).decode('utf-8')})
-      continue
-
-    m = csrf_token.search(res.content)
-    if m:
-      session.headers.update({'csrf-token': m.group(1).decode('utf-8')})
-      break
-  return session
+from .config import config
+from .utils import generate_client
 
 def search_anime(query="Evangelion"):
   print(f"Ricercando {query}...")
-  response = generate_client().get(WEBSITE+"/search?keyword=" + query)
+  # Utilizza l'endpoint di ricerca HTML dalla configurazione centralizzata
+  html_endpoint = config.get_html_endpoint()
+  response = generate_client().get(html_endpoint + "?keyword=" + query)
   if response.status_code == 200:
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -42,7 +21,9 @@ def search_anime(query="Evangelion"):
       title_italian = item.find('a', class_='name').text.strip()
       jtitle = item.find('a', class_='name')['data-jtitle']
       image_url = item.find('img')['src']
-      link = WEBSITE + item.find('a', class_='name')['href']
+      # Utilizza get_full_url() dalla configurazione per costruire l'URL completo
+      href = item.find('a', class_='name')['href']
+      link = config.get_full_url(href)
       
       anime_data.append({
         'jap_title': jtitle,
