@@ -16,6 +16,10 @@ import json
 from pathlib import Path
 
 
+# Usato anche quando un config.json già esistente non contiene questa chiave
+DEFAULT_EPISODE_INFO_ENDPOINT = "/api/episode/info"
+
+
 class ConfigManager:
   """Gestisce la configurazione centralizzata dell'applicazione."""
   
@@ -76,7 +80,8 @@ class ConfigManager:
       "base_url": "https://www.animeworld.ac",
       "endpoints": {
         "html_endpoint": "/search",
-        "api_endpoint": "/api/search/v2"
+        "api_endpoint": "/api/search/v2",
+        "episode_info_endpoint": DEFAULT_EPISODE_INFO_ENDPOINT
       },
       "headers": {
         "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
@@ -103,6 +108,16 @@ class ConfigManager:
         str: URL completo dell'endpoint API
     """
     endpoint_path = self._config.get('endpoints', {}).get('api_endpoint', '')
+    return self.get_base_url() + endpoint_path
+  
+  def get_episode_info_endpoint(self):
+    """
+    Restituisce l'URL completo dell'endpoint che fornisce il link diretto di un episodio (/api/episode/info).
+    
+    Returns:
+        str: URL completo dell'endpoint
+    """
+    endpoint_path = self._config.get('endpoints', {}).get('episode_info_endpoint', DEFAULT_EPISODE_INFO_ENDPOINT)
     return self.get_base_url() + endpoint_path
   
   def get_html_endpoint(self):
