@@ -41,6 +41,8 @@ L’idea è nata per consentire la visione degli anime sul mio **home server**; 
 
 ## Installazione
 
+Serve **Python 3.11 o successivo**.
+
 1. Clona il repository:
    ```bash
    git clone https://github.com/zGenny/zDownloader-chan.git
