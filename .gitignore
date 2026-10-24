@@ -5,3 +5,6 @@ venv/
 *.mp4
 downloads/
 *.log
+.env
+settings.json
+stats.json

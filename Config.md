@@ -14,7 +14,8 @@ Per cambiare l'URL del sito anime:
      "base_url": "https://www.nuovo-sito-anime.it",
      "endpoints": {
        "html_endpoint": "/search",
-       "api_endpoint": "/api/search/v2"
+       "api_endpoint": "/api/search/v2",
+       "episode_info_endpoint": "/api/episode/info"
      },
      "headers": {
        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
@@ -47,6 +48,7 @@ Per cambiare l'URL del sito anime:
 - **base_url**: URL base del sito anime
 - **endpoints.html_endpoint**: Percorso per la ricerca HTML*
 - **endpoints.api_endpoint**: Percorso per l'API JSON*
+- **endpoints.episode_info_endpoint**: Percorso per l'API che restituisce il link diretto di un episodio*
 - **headers.user_agent**: User-Agent per le richieste HTTP*
 
 > [!NOTE]
